@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alder Elwood — NYC Racer</title>
+<style>
+:root {
+  --site-primary: #d5a94b;
+  --site-on-primary: #17120a;
+  --site-secondary: #172b3c;
+  --site-on-secondary: #f5f2e9;
+  --site-background: #080d13;
+  --site-on-background: #f4f0e6;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+  --site-font-heading: Inter, ui-sans-serif, system-ui, sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--site-background); color: var(--site-on-background); font-family: var(--site-font-body); }
+#app { min-height: 100vh; width: 100%; background-color: var(--site-background); color: var(--site-on-background); overflow: hidden; }
+.topbar { display:flex; justify-content:space-between; align-items:center; gap:16px; padding: calc(16px * var(--site-spacing-scale)) clamp(16px,4vw,54px); background: #0d1722; border-bottom:1px solid #273747; }
+.brand { display:flex; align-items:center; gap:12px; letter-spacing:.16em; font-weight:850; font-size:13px; }
+.mark { width:35px;height:35px;border:1px solid var(--site-primary);border-radius:50%;display:grid;place-items:center;color:var(--site-primary);font-family:Georgia,serif;font-size:16px;letter-spacing:-.1em; }
+.topnote { color:#aab6c1;font-size:11px;letter-spacing:.18em;text-transform:uppercase; }
+main { max-width:1200px; margin:0 auto; padding:24px clamp(12px,3vw,32px) 34px; }
+.heading { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:18px; }
+h1 { margin:0; font-family:var(--site-font-heading);font-size:clamp(26px,4vw,43px);letter-spacing:-.045em;line-height:1.02; }
+h1 span { color:var(--site-primary); }
+.sub { margin:8px 0 0;color:#9ba9b7;font-size:13px; }
+.status { color:#d7b66c;font-size:11px;letter-spacing:.15em;text-transform:uppercase;border:1px solid #68552d;padding:9px 12px;border-radius:999px;white-space:nowrap; }
+.game-shell { position:relative; border:1px solid #354758; border-radius:calc(18px * var(--site-radius-scale)); overflow:hidden; background:#172c3d; box-shadow:0 22px 70px #0008; }
+#game { display:block; position:relative; width:100%; aspect-ratio:16/9; min-height:300px; background:#91b5c7; }
+#game canvas { display:block; width:100%; height:100%; }
+.hud { position:absolute;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;gap:10px;pointer-events:none; }
+.hudbox { background:#07111bd9;border:1px solid #ffffff25;border-radius:10px;padding:9px 12px;min-width:90px;backdrop-filter:blur(5px); }
+.hudlabel { color:#91a5b5;font-size:9px;letter-spacing:.16em;text-transform:uppercase; }
+.hudvalue { font-size:19px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums; }
+.hudbox { box-shadow:0 5px 22px #0005; }
+.nitrobar { height:5px;width:100%;background:#ffffff25;border-radius:9px;margin-top:7px;overflow:hidden; }
+.nitrofill { height:100%;width:100%;background:linear-gradient(90deg,#19c9ff,#f5d36b);border-radius:9px;transform-origin:left; }
+.overlay { position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(#07111b55,#07111bcc);padding:20px;text-align:center; }
+.panel { max-width:420px;background:#0b1622ed;border:1px solid #d5a94b66;border-radius:16px;padding:clamp(18px,4vw,30px);box-shadow:0 18px 55px #0008; }
+.panel h2 { margin:0 0 8px;font-size:clamp(22px,3vw,30px); }
+.panel p { color:#b8c3cc;font-size:13px;line-height:1.6;margin:0 0 18px; }
+button { border:0;border-radius:8px;background:var(--site-primary);color:var(--site-on-primary);padding:12px 20px;font-weight:850;letter-spacing:.08em;text-transform:uppercase;cursor:pointer; }
+button:hover { filter:brightness(1.1); transform:translateY(-1px); }
+.hint { font-size:11px;color:#91a5b5;margin-top:12px; }
+.below { display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-top:14px; }
+.info { background:#101c28;border:1px solid #273747;border-radius:12px;padding:15px 17px; }
+.info h3 { margin:0 0 8px;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--site-primary); }
+.info p { margin:0;color:#aebbc6;font-size:12px;line-height:1.6; }
+.keys { display:flex;gap:7px;flex-wrap:wrap;margin-top:9px; }
+kbd { background:#1d2e3d;border:1px solid #405365;border-radius:5px;padding:4px 7px;color:#f5f2e9;font-size:10px; }
+.touch { display:none;justify-content:center;gap:12px;margin-top:12px; }
+.touch button { width:76px;background:#1d3447;color:#fff;border:1px solid #52697b; }
+footer { text-align:center;color:#627383;font-size:10px;letter-spacing:.12em;padding:22px 12px 30px; }
+@media(max-width:650px){.topnote{display:none}.heading{align-items:start;flex-direction:column}.below{grid-template-columns:1fr}.hudbox{min-width:70px;padding:7px 9px}.hudvalue{font-size:16px}.touch{display:flex}.status{font-size:9px}}
+</style>
+</head>
+<body>
+<div id="app">
+<header class="topbar"><div class="brand"><div class="mark">AE</div><div>ALDER ELWOOD <span style="color:#d5a94b">RACING</span></div></div><div class="topnote">New York City · Street Circuit · Prototype 01</div></header>
+<main>
+  <div class="heading"><div><h1>NYC <span>STREET RUSH</span></h1><p class="sub">A premium-style 3D street racing experience from Alder Elwood. Own the streets of New York.</p></div><div class="status">● STREET RACING · BUILD 03</div></div>
+  <section class="game-shell" aria-label="Racing game">
+    <div id="game" aria-label="Three-dimensional racing game"></div>
+    <div class="hud"><div class="hudbox"><div class="hudlabel">Speed</div><div class="hudvalue"><span id="speed">0</span> <small style="font-size:10px;color:#9ba9b7">KM/H</small></div></div><div class="hudbox"><div class="hudlabel">Distance</div><div class="hudvalue"><span id="distance">0</span> <small style="font-size:10px;color:#9ba9b7">M</small></div></div><div class="hudbox"><div class="hudlabel">Nitro</div><div class="hudvalue" id="nitroLabel">100%</div><div class="nitrobar"><div class="nitrofill" id="nitroFill"></div></div></div><div class="hudbox"><div class="hudlabel">Best</div><div class="hudvalue" id="best">0</div></div></div>
+    <div class="overlay" id="overlay"><div class="panel"><div style="color:#d5a94b;font-size:10px;letter-spacing:.3em;font-weight:800;margin-bottom:10px">ALDER ELWOOD PRESENTS</div><h2 id="panelTitle">OWN THE STREETS.</h2><p id="panelText">Start your engine. Push the limits through a New York night run. Dodge traffic, build speed and unleash nitro.</p><button id="start">Start race</button><div class="hint">STEER A / D OR ← / → &nbsp; · &nbsp; ACCELERATE W / ↑ &nbsp; · &nbsp; NITRO SPACE</div></div></div>
+  </section>
+  <div class="touch"><button id="left">◀ LEFT</button><button id="boost">BOOST</button><button id="right">RIGHT ▶</button></div>
+  <section class="below"><div class="info"><h3>How to play</h3><p>1. Select <strong>Start race</strong>.<br>2. Use the arrow keys or A and D to steer.<br>3. Press W or the up arrow to accelerate. Hold SPACE for nitro.<br>4. On a phone, use the LEFT, BOOST and RIGHT buttons below the game.<br>5. Avoid traffic and rival cars. If you crash, select Race again.</p><div class="keys"><kbd>←</kbd><kbd>→</kbd><kbd>A</kbd><kbd>D</kbd><kbd>W / ↑</kbd><kbd>SPACE NITRO</kbd></div></div><div class="info"><h3>Your cars</h3><p><strong style="color:#f15b50">Red performance car</strong> · Your car<br><strong style="color:#56a9ef">Blue supercar</strong> · Rival car<br><strong style="color:#d8b45f">Gold supercar</strong> · Rival car<br><br><strong>Goal:</strong> race as far as possible and beat your best score.</p></div></section>
+  <section class="info" style="margin-top:14px"><h3>About this game</h3><p>An independent browser-based 3D racing project. It is inspired by the energy of arcade racers, but is not an official Asphalt game. This build adds a more detailed custom car, nitro management and a refined racing interface. Full AAA realism requires professionally modelled vehicle assets, advanced physics, audio and extensive optimization.</p></section>
+</main>
+<footer>ALDER ELWOOD · BUILT FOR THE LOVE OF THE RACE</footer>
+</div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+(() => {
+const host=document.getElementById('game'),overlay=document.getElementById('overlay'),startBtn=document.getElementById('start');
+const speedEl=document.getElementById('speed'),distEl=document.getElementById('distance'),bestEl=document.getElementById('best');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x91b9d0);scene.fog=new THREE.Fog(0x91b9d0,65,230);
+const camera=new THREE.PerspectiveCamera(65,16/9,.1,500);camera.position.set(0,6,13);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;host.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xdceeff,0x3b4652,2.0));const sun=new THREE.DirectionalLight(0xffe2b4,2.5);sun.position.set(-12,24,10);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
+const mat=(color,rough=.55,metal=0)=>new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal});
+const asphalt=mat(0x292e34,.98),lineMat=mat(0xf3e7c8),sideMat=mat(0x9c9a91),glass=mat(0x102b40,.16,.58),rubber=mat(0x090b0e,.95),lampMat=new THREE.MeshStandardMaterial({color:0xfff0b8,emissive:0xffc45d,emissiveIntensity:2.2});
+const roadCanvas=document.createElement('canvas');roadCanvas.width=256;roadCanvas.height=256;const roadCtx=roadCanvas.getContext('2d');roadCtx.fillStyle='#292e34';roadCtx.fillRect(0,0,256,256);for(let i=0;i<5000;i++){const v=35+Math.random()*35;roadCtx.fillStyle=`rgba(${v},${v},${v},${Math.random()*.22})`;roadCtx.fillRect(Math.random()*256,Math.random()*256,1+Math.random()*2,1+Math.random()*2);}const roadTexture=new THREE.CanvasTexture(roadCanvas);roadTexture.wrapS=roadTexture.wrapT=THREE.RepeatWrapping;roadTexture.repeat.set(2,36);roadTexture.colorSpace=THREE.SRGBColorSpace;asphalt.map=roadTexture;asphalt.needsUpdate=true;
+const road=new THREE.Mesh(new THREE.PlaneGeometry(18,420),asphalt);road.rotation.x=-Math.PI/2;road.position.set(0,-.04,-150);road.receiveShadow=true;scene.add(road);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(240,440),mat(0x68766e));ground.rotation.x=-Math.PI/2;ground.position.set(0,-.12,-150);scene.add(ground);
+for(let x of [-9.25,9.25]){const curb=new THREE.Mesh(new THREE.BoxGeometry(.5,.18,420),sideMat);curb.position.set(x,.02,-150);scene.add(curb);}
+for(let x of [-3,3])for(let z=-350;z<60;z+=12){const dash=new THREE.Mesh(new THREE.BoxGeometry(.13,.025,5),lineMat);dash.position.set(x,.015,z);scene.add(dash);}
+const city=new THREE.Group();scene.add(city);
+for(let side of [-1,1])for(let i=0;i<44;i++){const h=8+(i*17%27),w=5+(i*7%5),d=7+(i*11%8),x=side*(15+(i%3)*5),z=-i*9-8;const building=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat([0x536675,0x6d7478,0x394e5e,0x827b70][i%4],.85));building.position.set(x,h/2-.05,z);building.castShadow=true;building.receiveShadow=true;city.add(building);const rows=Math.floor(h/2.5);for(let r=0;r<rows;r++)for(let c=0;c<2;c++){const win=new THREE.Mesh(new THREE.BoxGeometry(.65,.9,.05),new THREE.MeshBasicMaterial({color:i%3===0?0xffd99a:0x9ec5d8}));win.position.set(x+(c-.5)*1.8,h/2-r*2.3,z+d/2+.03);city.add(win);}}
+function makeCar(color){const g=new THREE.Group(),paint=mat(color,.22,.72),dark=mat(0x10151b,.32,.55),chrome=mat(0x9ca9b3,.2,.85),windowMat=glass;const body=new THREE.Mesh(new THREE.BoxGeometry(2.08,.58,4.25),paint);body.position.y=.78;body.castShadow=true;g.add(body);const nose=new THREE.Mesh(new THREE.BoxGeometry(1.9,.24,1.15),paint);nose.position.set(0,1.04,-1.52);g.add(nose);const rear=new THREE.Mesh(new THREE.BoxGeometry(1.92,.22,.85),paint);rear.position.set(0,1.03,1.62);g.add(rear);const cabin=new THREE.Mesh(new THREE.BoxGeometry(1.62,.7,1.95),windowMat);cabin.position.set(0,1.3,.05);cabin.castShadow=true;g.add(cabin);const roof=new THREE.Mesh(new THREE.BoxGeometry(1.48,.13,1.35),paint);roof.position.set(0,1.68,.05);g.add(roof);for(let side of [-1,1]){const sill=new THREE.Mesh(new THREE.BoxGeometry(.12,.22,2.5),dark);sill.position.set(side*1.02,.57,0);g.add(sill);const mirror=new THREE.Mesh(new THREE.BoxGeometry(.22,.14,.3),paint);mirror.position.set(side*1.02,1.22,-.7);g.add(mirror);for(let z of [-1.42,1.42]){const arch=new THREE.Mesh(new THREE.TorusGeometry(.48,.09,8,24),dark);arch.rotation.y=Math.PI/2;arch.position.set(side*1.02,.5,z);g.add(arch);}}for(let z of [-1.4,1.4])for(let x of [-1,1]){const wheel=new THREE.Group();wheel.position.set(x,.48,z);const tire=new THREE.Mesh(new THREE.CylinderGeometry(.43,.43,.3,24),rubber);tire.rotation.z=Math.PI/2;tire.castShadow=true;wheel.add(tire);const rim=new THREE.Mesh(new THREE.CylinderGeometry(.25,.25,.315,20),chrome);rim.rotation.z=Math.PI/2;wheel.add(rim);const hub=new THREE.Mesh(new THREE.CylinderGeometry(.09,.09,.33,16),dark);hub.rotation.z=Math.PI/2;wheel.add(hub);g.add(wheel);}for(let x of [-.7,.7]){const head=new THREE.Mesh(new THREE.BoxGeometry(.48,.14,.08),lampMat);head.position.set(x,.91,-2.14);g.add(head);const tail=new THREE.Mesh(new THREE.BoxGeometry(.48,.13,.08),new THREE.MeshStandardMaterial({color:0xff3434,emissive:0xb90000,emissiveIntensity:1.4}));tail.position.set(x,.9,2.14);g.add(tail);}const grille=new THREE.Mesh(new THREE.BoxGeometry(.85,.22,.07),dark);grille.position.set(0,.72,-2.16);g.add(grille);const spoiler=new THREE.Mesh(new THREE.BoxGeometry(1.7,.1,.32),dark);spoiler.position.set(0,1.35,1.88);g.add(spoiler);const flameMat=new THREE.MeshBasicMaterial({color:0x35cfff,transparent:true,opacity:.9});const flame=new THREE.Mesh(new THREE.ConeGeometry(.2,.95,12),flameMat);flame.rotation.x=-Math.PI/2;flame.position.set(0,.58,2.45);flame.visible=false;g.add(flame);g.userData.flame=flame;return g;}
+const player=makeCar(0xd9272e);player.position.set(0,0,5);scene.add(player);
+let rivals=[],running=false,speed=0,distance=0,best=Number(localStorage.getItem('ae-racer-best')||0),keys={},boosting=false,last=0,spawnTimer=0,nitro=100;
+bestEl.textContent=best;
+function addRival(){const lane=[-5.5,0,5.5][Math.floor(Math.random()*3)],car=makeCar(Math.random()>.5?0x176ac1:0xc59a36);car.position.set(lane,0,-125);scene.add(car);rivals.push({mesh:car,z:-125,lane,speed:18+Math.random()*12});}
+function resize(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}new ResizeObserver(resize).observe(host);resize();
+function render(){renderer.render(scene,camera);}
+function update(dt){const accel=keys.ArrowUp||keys.w||keys.W,brake=keys.ArrowDown||keys.s||keys.S;boosting=!!keys[' ']&&nitro>0;if(boosting)nitro=Math.max(0,nitro-34*dt);else nitro=Math.min(100,nitro+12*dt);document.getElementById('nitroFill').style.transform=`scaleX(${nitro/100})`;document.getElementById('nitroLabel').textContent=Math.round(nitro)+'%';player.userData.flame.visible=boosting;player.userData.flame.scale.setScalar(.75+Math.random()*.65);const target=brake?12:(boosting?78:(accel?53:34));speed+=(target-speed)*Math.min(1,dt*1.7);const steer=(keys.ArrowLeft||keys.a||keys.A?-1:0)+(keys.ArrowRight||keys.d||keys.D?1:0);player.position.x=THREE.MathUtils.clamp(player.position.x+steer*dt*(6+speed*.105),-6.2,6.2);player.rotation.z=THREE.MathUtils.lerp(player.rotation.z,-steer*.11,Math.min(1,dt*5));const travel=speed*dt;distance+=travel*1.7;distEl.textContent=Math.floor(distance);speedEl.textContent=Math.round(speed*3.6);road.position.z+=travel;if(road.position.z>60)road.position.z-=420;roadTexture.offset.y-=travel/420;ground.position.z+=travel;if(ground.position.z>60)ground.position.z-=440;city.position.z+=travel;if(city.position.z>80)city.position.z-=440;spawnTimer-=dt;if(spawnTimer<=0){addRival();spawnTimer=1.25+Math.random()*.9;}for(const r of rivals){r.z+=travel-r.speed*dt;r.mesh.position.z=r.z;if(Math.abs(r.z-player.position.z)<3.1&&Math.abs(r.mesh.position.x-player.position.x)<2.05){endGame();return;}}rivals=rivals.filter(r=>{if(r.z>20){scene.remove(r.mesh);return false;}return true;});camera.position.x+=(player.position.x*.42-camera.position.x)*Math.min(1,dt*3);camera.position.z=12;camera.position.y=6.2+speed*.012;camera.lookAt(player.position.x*.25,1,-13);scene.fog.near=boosting?45:65;scene.fog.far=boosting?190:230;player.position.y=.035+Math.sin(performance.now()*.012)*.025;}
+function loop(ts){if(!running)return;const dt=Math.min(.04,(ts-last)/1000||0);last=ts;update(dt);render();if(running)requestAnimationFrame(loop);}
+function begin(){for(const r of rivals)scene.remove(r.mesh);rivals=[];player.position.set(0,0,5);player.rotation.set(0,0,0);speed=22;distance=0;nitro=100;spawnTimer=.8;running=true;overlay.style.display='none';last=performance.now();requestAnimationFrame(loop);}
+function endGame(){if(!running)return;running=false;const score=Math.floor(distance);if(score>best){best=score;localStorage.setItem('ae-racer-best',best);bestEl.textContent=best;}document.getElementById('panelTitle').textContent='Race over';document.getElementById('panelText').textContent='You raced '+score+' metres. Your best distance is '+best+' metres. Ready for another run?';startBtn.textContent='Race again';overlay.style.display='grid';}
+startBtn.addEventListener('click',begin);window.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key))e.preventDefault();keys[e.key]=true;if(e.key==='Enter'&&!running)begin();});window.addEventListener('keyup',e=>keys[e.key]=false);
+function hold(id,key){const b=document.getElementById(id);b.addEventListener('pointerdown',e=>{e.preventDefault();keys[key]=true;});['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>keys[key]=false));}hold('left','ArrowLeft');hold('right','ArrowRight');hold('boost',' ');
+camera.lookAt(0,0,-12);render();
+})();
+</script>
+</body>
+</html>
